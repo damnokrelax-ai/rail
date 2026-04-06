@@ -5,18 +5,18 @@
   <style>
     body {
       font-family: Arial;
-      background: #0f172a;
-      color: white;
+      background: #000; /* Black background */
+      color: #fff;      /* White text */
       margin: 0;
       text-align: center;
-      overflow-x: hidden;
     }
 
     header {
-      background: #020617;
+      background: #111; /* Dark header */
       padding: 30px 0;
       font-size: 36px;
       font-weight: bold;
+      color: #fff;
     }
 
     h1 {
@@ -27,16 +27,20 @@
     button {
       padding: 15px 30px;
       margin: 10px;
-      border: none;
+      border: 2px solid #fff; /* White border for contrast */
       border-radius: 10px;
-      background: #2563eb;
-      color: white;
+      background: #000;       /* Black button */
+      color: #fff;
       cursor: pointer;
       font-size: 18px;
-      transition: transform 0.2s;
+      transition: transform 0.2s, background 0.2s, color 0.2s;
     }
 
-    button:hover { transform: scale(1.1); }
+    button:hover { 
+      transform: scale(1.1); 
+      background: #fff;
+      color: #000;
+    }
 
     .hidden { display: none; }
 
@@ -45,6 +49,30 @@
     @keyframes fadeIn { to { opacity: 1; } }
 
     .container { padding: 20px; }
+
+    .card {
+      background: #111; /* Dark card */
+      padding: 15px;
+      margin: 10px auto;
+      border-radius: 10px;
+      cursor: pointer;
+      max-width: 600px;
+      transition: transform 0.2s, background 0.2s;
+      border: 1px solid #fff; /* White border */
+      text-align: left;
+    }
+
+    .card:hover { transform: scale(1.02); background: #222; }
+
+    .details {
+      margin-top: 10px;
+      padding: 10px;
+      background: #222;
+      border-radius: 8px;
+    }
+
+    .operator { font-weight: bold; }
+    .loco-type { font-style: italic; color: #facc15; }
   </style>
 </head>
 <body>
@@ -53,7 +81,7 @@
 
 <div class="container fade-in" id="intro">
   <h1>Welcome to SiemensUN</h1>
-  <p>Helping trainspotters track tours and events worldwide.</p>
+  <p>Helping trainspotters track tours and events across Australia.</p>
   <button onclick="startApp()">Let's Start</button>
 </div>
 
@@ -69,11 +97,64 @@
   <div id="stateButtons"></div>
 </div>
 
+<div class="container hidden" id="toursContainer">
+  <h2 id="toursTitle"></h2>
+  <div id="tourCards"></div>
+</div>
+
 <script>
 const countries = {
-  "Australia": ["Victoria", "New South Wales", "Queensland", "South Australia", "Western Australia", "Tasmania", "Northern Territory", "Australian Capital Territory"],
-  "Japan": ["Hokkaido", "Tohoku", "Kanto", "Chubu", "Kinki", "Chugoku", "Shikoku", "Kyushu"],
-  "China": ["Beijing", "Shanghai", "Guangdong", "Sichuan", "Zhejiang", "Jiangsu", "Shandong", "Hubei"]
+  "Australia": ["Victoria", "New South Wales", "Queensland"],
+  "Japan": ["Hokkaido", "Kanto"],
+  "China": ["Beijing", "Shanghai"]
+};
+
+// Example full VIC tours data (Steamrail, 707, SRHC)
+const toursData = {
+  "Australia": {
+    "Victoria": [
+      {
+        name: "Laverton Steam Train Rides",
+        operator: "Steamrail Victoria",
+        date: "2026-03-29",
+        type: "Steam",
+        locos: ["R711 Steam Locomotive"],
+        description: "Skirt Port Phillip Bay by steam, with return shuttles from Laverton Station to Newport via the 'Altona Loop'."
+      },
+      {
+        name: "Bendigo Easter Festival",
+        operator: "707 Operations",
+        date: "2026-04-05",
+        type: "Diesel",
+        locos: ["R711 Diesel Locomotive", "Vintage Diesels"],
+        description: "Return trip from Melbourne to Bendigo for a day at the Bendigo Easter Festival."
+      },
+      {
+        name: "Essendon Steam Shuttles",
+        operator: "SRHC",
+        date: "2026-04-18",
+        type: "Steam",
+        locos: ["Vintage Steam Engine 1"],
+        description: "Step back into the 1950's and travel through Melbourne's suburbs from Essendon to Flinders Street."
+      },
+      {
+        name: "Rail and Sail",
+        operator: "Steamrail Victoria",
+        date: "2026-04-26",
+        type: "Steam",
+        locos: ["R711 Steam Locomotive", "Vintage Carriages"],
+        description: "Combine sea voyage with a heritage steam train for a day return between Melbourne and Geelong."
+      },
+      {
+        name: "Eureka Express",
+        operator: "707 Operations",
+        date: "2026-06-27",
+        type: "Steam",
+        locos: ["R Class Steam Locomotive"],
+        description: "Travel to the historic goldrush city of Ballarat behind a vintage R class steam locomotive."
+      }
+    ]
+  }
 };
 
 function startApp() {
@@ -102,8 +183,42 @@ function selectCountry(country) {
 }
 
 function showTours(country, state) {
-  // Placeholder for now, we’ll add actual tours next
-  alert(`Show tours for ${state}, ${country} next 🔥`);
+  document.getElementById("regions").classList.add("hidden");
+  const toursContainer = document.getElementById("toursContainer");
+  toursContainer.classList.remove("hidden");
+  toursContainer.classList.add("fade-in");
+
+  document.getElementById("toursTitle").innerText = `Tours in ${state}, ${country}`;
+
+  const tourCards = document.getElementById("tourCards");
+  tourCards.innerHTML = "";
+
+  if (!toursData[country] || !toursData[country][state]) return;
+
+  toursData[country][state].forEach(tour => {
+    const card = document.createElement("div");
+    card.className = "card fade-in";
+    card.innerHTML = `
+      <h3>${tour.name}</h3>
+      <p class="operator">Operator: ${tour.operator}</p>
+      <p class="loco-type">Type: ${tour.type}</p>
+    `;
+
+    const details = document.createElement("div");
+    details.className = "details hidden";
+    details.innerHTML = `
+      <p>${tour.description}</p>
+      <p>Locomotives: ${tour.locos.join(", ")}</p>
+      <p>Date: ${tour.date}</p>
+    `;
+
+    card.appendChild(details);
+    card.addEventListener("click", () => {
+      details.classList.toggle("hidden");
+    });
+
+    tourCards.appendChild(card);
+  });
 }
 </script>
 
