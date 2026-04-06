@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SiemensUN</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      margin: 0;
+    }
+
+    header {
+      background: #020617;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .live { color: #22c55e; }
+  </style>
+</head>
+
+<body>
+
+<header>🚂 SiemensUN</header>
+
+<div class="container">
+
+  <h2>Welcome</h2>
+  <p>
+    Welcome to SiemensUN.  
+    We help trainspotters track tours, find events, and access useful rail info.
+  </p>
+
+  <h2>Select Region</h2>
+  <button onclick="showVictoria()">Victoria</button>
+
+  <div id="victoria" class="hidden">
+    <h2>Public Tours</h2>
+    <div id="tours"></div>
+  </div>
+
+  <h2>🔒 Member Access</h2>
+  <input id="token" placeholder="Enter token">
+  <button onclick="checkToken()">Enter</button>
+
+  <div id="secret" class="hidden">
+    <h3>Secret Info</h3>
+    <p>Rare movements, unlisted tours, spotting info.</p>
+  </div>
+
+</div>
+
+<script>
+const tours = [
+  { name: "Laverton Steam Train Rides", date: "2026-03-29" },
+  { name: "Bendigo Easter Festival", date: "2026-04-05" },
+  { name: "Essendon Steam Shuttles", date: "2026-04-18" },
+  { name: "Rail and Sail", date: "2026-04-26" },
+  { name: "Eureka Express", date: "2026-06-27" },
+  { name: "Snow Train", date: "2026-08-01" },
+  { name: "Seymour Vintage Train", date: "2026-08-08" }
+];
+
+function showVictoria() {
+  document.getElementById("victoria").classList.remove("hidden");
+
+  const container = document.getElementById("tours");
+  container.innerHTML = "";
+
+  const today = new Date().toISOString().split("T")[0];
+
+  tours.forEach(tour => {
+    let status = "";
+    if (tour.date === today) status = "🔥 HAPPENING NOW";
+
+    container.innerHTML += `
+      <div class="card">
+        <h3>${tour.name}</h3>
+        <p>${tour.date}</p>
+        <p class="live">${status}</p>
+      </div>
+    `;
+  });
+}
+
+function checkToken() {
+  const t = document.getElementById("token").value;
+  if (t === "siemens123") {
+    document.getElementById("secret").classList.remove("hidden");
+  } else {
+    alert("Invalid token");
+  }
+}
+</script>
+
+</body>
+</html>
