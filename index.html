@@ -8,13 +8,14 @@
       background: #0f172a;
       color: white;
       margin: 0;
+      overflow-x: hidden;
     }
 
     header {
       background: #020617;
       padding: 20px;
       text-align: center;
-      font-size: 24px;
+      font-size: 26px;
       font-weight: bold;
     }
 
@@ -22,98 +23,132 @@
       padding: 20px;
     }
 
+    button {
+      padding: 12px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    button:hover { transform: scale(1.1); }
+
+    .hidden { display: none; }
+
     .card {
       background: #1e293b;
       padding: 15px;
       margin: 10px 0;
       border-radius: 10px;
-    }
-
-    button {
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #2563eb;
-      color: white;
       cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
     }
 
-    input {
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
+    .card:hover { transform: scale(1.02); background: #334155; }
+
+    .details {
       margin-top: 10px;
+      padding: 10px;
+      background: #334155;
+      border-radius: 8px;
     }
 
-    .hidden {
-      display: none;
+    .live { color: #22c55e; font-weight: bold; }
+    .soon { color: #facc15; font-weight: bold; }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-in forwards;
+      opacity: 0;
     }
 
-    .live { color: #22c55e; }
+    @keyframes fadeIn { to { opacity: 1; } }
   </style>
 </head>
-
 <body>
 
 <header>🚂 SiemensUN</header>
 
-<div class="container">
-
+<div class="container fade-in" id="intro">
   <h2>Welcome</h2>
-  <p>
-    Welcome to SiemensUN.  
-    We help trainspotters track tours, find events, and access useful rail info.
-  </p>
+  <p>Welcome to SiemensUN. We help trainspotters track tours, find events, and access useful rail info.</p>
+  <button onclick="startApp()">Let's Start</button>
+</div>
 
+<div class="container hidden" id="regions">
   <h2>Select Region</h2>
   <button onclick="showVictoria()">Victoria</button>
+</div>
 
-  <div id="victoria" class="hidden">
-    <h2>Public Tours</h2>
-    <div id="tours"></div>
-  </div>
+<div class="container hidden" id="victoria">
+  <h2>Public Tours - Victoria</h2>
+  <div id="tours"></div>
+</div>
 
+<div class="container">
   <h2>🔒 Member Access</h2>
   <input id="token" placeholder="Enter token">
   <button onclick="checkToken()">Enter</button>
-
   <div id="secret" class="hidden">
     <h3>Secret Info</h3>
     <p>Rare movements, unlisted tours, spotting info.</p>
   </div>
-
 </div>
 
 <script>
 const tours = [
-  { name: "Laverton Steam Train Rides", date: "2026-03-29" },
-  { name: "Bendigo Easter Festival", date: "2026-04-05" },
-  { name: "Essendon Steam Shuttles", date: "2026-04-18" },
-  { name: "Rail and Sail", date: "2026-04-26" },
-  { name: "Eureka Express", date: "2026-06-27" },
-  { name: "Snow Train", date: "2026-08-01" },
-  { name: "Seymour Vintage Train", date: "2026-08-08" }
+  { name: "Laverton Steam Train Rides", date: "2026-03-29", description: "Skirt Port Phillip Bay by steam, with return shuttles from Laverton Station to Newport via the 'Altona Loop' for one day only." },
+  { name: "Bendigo Easter Festival", date: "2026-04-05", description: "Return trip from Melbourne to Bendigo for a day at the Bendigo Easter Festival, with R711 & vintage diesels." },
+  { name: "Essendon Steam Shuttles", date: "2026-04-18", description: "Step back into the 1950's and travel by vintage steam train through Melbourne's suburbs from Essendon to Flinders Street and return." },
+  { name: "Rail and Sail", date: "2026-04-26", description: "Combine the romance & excitement of a sea voyage with the nostalgia & style of a heritage train onboard Steamrail Victoria's Rail and Sail. Choose your way to travel on a day return journey between Melbourne and Geelong." },
+  { name: "Eureka Express", date: "2026-06-27", description: "Join us aboard The Vintage Train as we travel to the historic goldrush city of Ballarat and return behind an R class steam locomotive." },
+  { name: "Snow Train", date: "2026-08-01", description: "Excursion to the snow – by steam train, forget the car, relaxed day out with family and friends aboard The Vintage Train." },
+  { name: "Seymour Vintage Train", date: "2026-08-08", description: "Reminiscent of the glory days of 'The Spirit of Progress', travel to the Goulburn Valley on a return journey to the railway town of Seymour." }
 ];
 
+function startApp() {
+  document.getElementById("intro").classList.add("hidden");
+  const regions = document.getElementById("regions");
+  regions.classList.remove("hidden");
+  regions.classList.add("fade-in");
+}
+
 function showVictoria() {
-  document.getElementById("victoria").classList.remove("hidden");
+  const victoria = document.getElementById("victoria");
+  victoria.classList.remove("hidden");
+  victoria.classList.add("fade-in");
 
   const container = document.getElementById("tours");
   container.innerHTML = "";
 
   const today = new Date().toISOString().split("T")[0];
 
-  tours.forEach(tour => {
+  tours.forEach((tour, index) => {
     let status = "";
     if (tour.date === today) status = "🔥 HAPPENING NOW";
+    else if (tour.date > today) status = "🟡 Upcoming";
 
-    container.innerHTML += `
-      <div class="card">
-        <h3>${tour.name}</h3>
-        <p>${tour.date}</p>
-        <p class="live">${status}</p>
-      </div>
+    const card = document.createElement("div");
+    card.className = "card fade-in";
+    card.innerHTML = `
+      <h3>${tour.name}</h3>
+      <p>${tour.date}</p>
+      <p class="${tour.date===today?'live':'soon'}">${status}</p>
     `;
+
+    const details = document.createElement("div");
+    details.className = "details hidden";
+    details.innerHTML = tour.description;
+
+    card.appendChild(details);
+
+    card.addEventListener("click", () => {
+      details.classList.toggle("hidden");
+    });
+
+    container.appendChild(card);
   });
 }
 
@@ -121,6 +156,7 @@ function checkToken() {
   const t = document.getElementById("token").value;
   if (t === "siemens123") {
     document.getElementById("secret").classList.remove("hidden");
+    document.getElementById("secret").classList.add("fade-in");
   } else {
     alert("Invalid token");
   }
