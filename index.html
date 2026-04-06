@@ -5,18 +5,17 @@
   <style>
     body {
       font-family: Arial;
-      background: #000; /* Black background */
-      color: #fff;      /* White text */
+      background: #000;
+      color: #fff;
       margin: 0;
       text-align: center;
     }
 
     header {
-      background: #111; /* Dark header */
+      background: #111;
       padding: 30px 0;
       font-size: 36px;
       font-weight: bold;
-      color: #fff;
     }
 
     h1 {
@@ -27,9 +26,9 @@
     button {
       padding: 15px 30px;
       margin: 10px;
-      border: 2px solid #fff; /* White border for contrast */
+      border: 2px solid #fff;
       border-radius: 10px;
-      background: #000;       /* Black button */
+      background: #000;
       color: #fff;
       cursor: pointer;
       font-size: 18px;
@@ -43,7 +42,6 @@
     }
 
     .hidden { display: none; }
-
     .fade-in { animation: fadeIn 0.5s ease-in forwards; opacity: 0; }
 
     @keyframes fadeIn { to { opacity: 1; } }
@@ -51,14 +49,14 @@
     .container { padding: 20px; }
 
     .card {
-      background: #111; /* Dark card */
+      background: #111;
       padding: 15px;
       margin: 10px auto;
       border-radius: 10px;
       cursor: pointer;
       max-width: 600px;
       transition: transform 0.2s, background 0.2s;
-      border: 1px solid #fff; /* White border */
+      border: 1px solid #fff;
       text-align: left;
     }
 
@@ -75,6 +73,7 @@
     .loco-type { font-style: italic; color: #facc15; }
   </style>
 </head>
+
 <body>
 
 <header>SiemensUN</header>
@@ -109,7 +108,6 @@ const countries = {
   "China": ["Beijing", "Shanghai"]
 };
 
-// Example full VIC tours data (Steamrail, 707, SRHC)
 const toursData = {
   "Australia": {
     "Victoria": [
@@ -144,22 +142,22 @@ const toursData = {
         type: "Steam",
         locos: ["TBA"],
         description: "Combine sea voyage with a heritage steam train for a day return between Melbourne and Geelong."
-        
       },
-       {
+      {
         name: "Maldon Experience",
         operator: "Steamrail Victoria",
-        date: "2026-05-9",
+        date: "2026-05-09",
         type: "Steam",
         locos: ["R711 and R761"],
-        description: "Join Steamrail as we head for the historic goldfields town of Maldon, taking you back to a time when it was possible to “change trains” at Castlemaine for a branch line trip to Maldon."  
+        description: "Join Steamrail as we head for Maldon via Castlemaine."
       },
-       {
+      {
         name: "Hurstbridge Members Train",
         operator: "Steamrail Victoria",
         date: "2026-05-10",
         type: "Steam and diesel",
-        description: "Join Steamrail Victoria for lunch in the Diamond Valley, as Y112 heads on a short return journey to Hurstbridge."  
+        locos: ["Y112"],
+        description: "Short return journey to Hurstbridge."
       },
       {
         name: "TBC - Ballarat Shuttles",
@@ -167,15 +165,15 @@ const toursData = {
         date: "2026-06-23 or 2026-06-24",
         type: "Steam",
         locos: ["TBA"],
-        description: "Steam train rides from Ballarat to Yendon and return."  
+        description: "Steam train rides from Ballarat to Yendon and return."
       },
-       {
+      {
         name: "Mordialloc Shuttles",
         operator: "Steamrail Victoria",
         date: "2026-06-13 or 2026-06-14",
         type: "Steam",
         locos: ["TBA"],
-        description: "Steam train rides from Mordialloc Station. Tickets & more info coming soon."
+        description: "Steam train rides from Mordialloc Station."
       },
       {
         name: "Eureka Express",
@@ -183,7 +181,7 @@ const toursData = {
         date: "2026-06-27",
         type: "Steam",
         locos: ["R Class Steam Locomotive"],
-        description: "Join The Vintage Train to Ballarat and return behind an R class steam locomotive."
+        description: "Join The Vintage Train to Ballarat."
       },
       {
         name: "Cranbourne Steam Train Rides",
@@ -191,7 +189,7 @@ const toursData = {
         date: "2026-07-25",
         type: "Steam",
         locos: ["Vintage Steam Engine"],
-        description: "Travel through Melbourne's suburbs from Cranbourne to Dandenong and back on a vintage steam train."
+        description: "Cranbourne to Dandenong return."
       },
       {
         name: "The Snow Train",
@@ -199,25 +197,23 @@ const toursData = {
         date: "2026-08-01",
         type: "Steam",
         locos: ["TBA"],
-        description: "Excursion to the snow by steam train. Relaxed day out with family and friends aboard The Vintage Train."
+        description: "Steam excursion to the snow."
       },
       {
         name: "Seymour Vintage Train",
-        operator: "Steamrail Victorias",
+        operator: "Steamrail Victoria",
         date: "2026-08-08",
         type: "Steam",
         locos: ["Vintage Steam Engine"],
-        description: "Travel over the great dividing range into the Goulburn Valley on a return journey to Seymour."
+        description: "Return journey to Seymour."
       },
       {
         name: "Hurstbridge Wattle Festival Shuttles",
         operator: "Steamrail Victoria",
         date: "2026-08-30",
         type: "Steam & Electric",
-        locos: ["Vintage Steam Engine", "Heritage Electric 'Red Rattler' Carriages"],
-        description: "Operate vintage steam engines with heritage electric carriages to the Hurstbridge Wattle Festival."
-      },
-    
+        locos: ["Steam Engine", "Red Rattler"],
+        description: "Wattle Festival shuttle runs."
       }
     ]
   }
@@ -225,21 +221,18 @@ const toursData = {
 
 function startApp() {
   document.getElementById("intro").classList.add("hidden");
-  const countriesDiv = document.getElementById("countries");
-  countriesDiv.classList.remove("hidden");
-  countriesDiv.classList.add("fade-in");
+  document.getElementById("countries").classList.remove("hidden");
 }
 
 function selectCountry(country) {
   document.getElementById("countries").classList.add("hidden");
-  const regionsDiv = document.getElementById("regions");
-  regionsDiv.classList.remove("hidden");
-  regionsDiv.classList.add("fade-in");
+  document.getElementById("regions").classList.remove("hidden");
 
   document.getElementById("regionTitle").innerText = `Select a state/province in ${country}`;
 
   const stateButtons = document.getElementById("stateButtons");
   stateButtons.innerHTML = "";
+
   countries[country].forEach(state => {
     const btn = document.createElement("button");
     btn.innerText = state;
@@ -250,20 +243,17 @@ function selectCountry(country) {
 
 function showTours(country, state) {
   document.getElementById("regions").classList.add("hidden");
-  const toursContainer = document.getElementById("toursContainer");
-  toursContainer.classList.remove("hidden");
-  toursContainer.classList.add("fade-in");
+  document.getElementById("toursContainer").classList.remove("hidden");
 
   document.getElementById("toursTitle").innerText = `Tours in ${state}, ${country}`;
 
   const tourCards = document.getElementById("tourCards");
   tourCards.innerHTML = "";
 
-  if (!toursData[country] || !toursData[country][state]) return;
-
   toursData[country][state].forEach(tour => {
     const card = document.createElement("div");
-    card.className = "card fade-in";
+    card.className = "card";
+
     card.innerHTML = `
       <h3>${tour.name}</h3>
       <p class="operator">Operator: ${tour.operator}</p>
@@ -279,9 +269,10 @@ function showTours(country, state) {
     `;
 
     card.appendChild(details);
-    card.addEventListener("click", () => {
+
+    card.onclick = () => {
       details.classList.toggle("hidden");
-    });
+    };
 
     tourCards.appendChild(card);
   });
